@@ -1,0 +1,19 @@
+# Entornos y secretos
+.env
+.venv/
+__pycache__/
+*.py[cod]
+
+# Node y Frontend
+node_modules/
+dist/
+.npm/
+
+# Corpus y datos locales
+corpus/
+corpus_md/
+
+# IDEs y SO
+.idea/
+.vscode/
+.DS_Store

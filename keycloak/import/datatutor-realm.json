@@ -1,0 +1,105 @@
+{
+  "realm": "datatutor",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "verifyEmail": false,
+  "bruteForceProtected": true,
+  "internationalizationEnabled": true,
+  "supportedLocales": ["es", "en"],
+  "defaultLocale": "es",
+  "accessTokenLifespan": 1800,
+  "ssoSessionIdleTimeout": 3600,
+  "roles": {
+    "realm": [
+      { "name": "admin", "description": "Puede borrar documentos globales de la base de conocimiento" },
+      { "name": "user", "description": "Usuario normal: chatea, sube y gestiona sus propios documentos" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "datatutor-web",
+      "name": "DataTutor (Frontend)",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": ["http://localhost:5173/*"],
+      "webOrigins": ["http://localhost:5173"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:5173/*"
+      },
+      "defaultClientScopes": ["web-origins", "profile", "roles", "email", "basic"],
+      "protocolMappers": [
+        {
+          "name": "audience-datatutor-web",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "datatutor-web",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "datatutor-swagger",
+      "name": "DataTutor (pruebas de la API, solo desarrollo)",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "redirectUris": ["http://localhost:8000/*"],
+      "webOrigins": ["http://localhost:8000"],
+      "attributes": { "pkce.code.challenge.method": "S256" },
+      "defaultClientScopes": ["web-origins", "profile", "roles", "email", "basic"],
+      "protocolMappers": [
+        {
+          "name": "audience-datatutor-web",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "datatutor-web",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "id": "aaaaaaaa-0000-0000-0000-000000000001",
+      "username": "admin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Admin",
+      "lastName": "DataTutor",
+      "email": "admin@datatutor.test",
+      "credentials": [{ "type": "password", "value": "admin123", "temporary": false }],
+      "realmRoles": ["admin", "user"]
+    },
+    {
+      "id": "aaaaaaaa-0000-0000-0000-000000000002",
+      "username": "estudiante",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Estudiante",
+      "lastName": "Demo",
+      "email": "estudiante@datatutor.test",
+      "credentials": [{ "type": "password", "value": "estudiante123", "temporary": false }],
+      "realmRoles": ["user"]
+    }
+  ]
+}
