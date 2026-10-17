@@ -1,19 +1,46 @@
-# Entornos y secretos
+# ── Entornos y secretos ──────────────────────────────
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+ngrok.yml
+
+# ── Python ───────────────────────────────────────────
 .venv/
 __pycache__/
 *.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+build/
 
-# Node y Frontend
+# ── Node y frontend ──────────────────────────────────
 node_modules/
 dist/
 .npm/
+.vite/
+coverage/
+*.local
+*.log
+npm-debug.log*
 
-# Corpus y datos locales
-corpus/
+# ── Corpus y datos locales (PDFs con derechos de autor) ──
+corpus/*
+!corpus/.gitkeep
+!corpus/README.md
 corpus_md/
 
-# IDEs y SO
+# ── Volcados y datos de base de datos ────────────────
+*.dump
+*.bak
+pgdata/
+
+# ── IDEs y sistema operativo ─────────────────────────
 .idea/
 .vscode/
+*.swp
 .DS_Store
+Thumbs.db
+Desktop.ini
