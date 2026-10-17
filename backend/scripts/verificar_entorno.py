@@ -3,7 +3,7 @@ import psycopg
 import httpx
 
 # Configuración quemada solo para el script de verificación
-DB_URL = "postgresql://postgres:postgres@localhost:5432/datatutor"
+DB_URL = "postgresql://postgres:postgres@127.0.0.1:5432/datatutor"
 OLLAMA_URL = "http://localhost:11434"
 KEYCLOAK_JWKS = "http://localhost:8080/realms/datatutor/protocol/openid-connect/certs"
 
@@ -30,7 +30,7 @@ def check_postgres():
 def check_ollama():
     print("[-] Verificando Ollama y modelos...")
     try:
-        with httpx.Client(timeout=10.0) as client:
+        with httpx.Client(timeout=httpx.Timeout(60.0,connect=5.0)) as client:
             # Verificar modelo de chat
             chat_payload = {
                 "model": "qwen2.5:3b",
@@ -48,7 +48,7 @@ def check_ollama():
 
             # Verificar modelo de embeddings
             embed_payload = {
-                "model": "bge-m3",
+                "model": "bge-m3:latest",
                 "input": "prueba de embedding"
             }
 

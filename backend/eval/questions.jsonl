@@ -1,0 +1,5 @@
+{"question": "¿Cuáles son las siete formas en las que puede fallar un proyecto de ciencia de datos?", "expected_intent": "explain"}
+{"question": "¿Cuál es la receta de la changua colombiana?", "expected_intent": "out_of_domain"}
+{"question": "Hola, buenas noches", "expected_intent": "smalltalk"}
+{"question": "¿Qué dice el documento sobre el liderazgo en los proyectos de IA?", "expected_intent": "explain"}
+{"question": "¿Cómo se configura un clúster de Kubernetes en AWS?", "expected_intent": "explain"}
