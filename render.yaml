@@ -1,0 +1,58 @@
+services:
+  - type: web
+    name: datatutor-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install uv && uv sync --frozen
+    startCommand: uv run uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: datatutor-db
+          property: connectionString
+      - key: OLLAMA_URL
+        sync: false
+      - key: OLLAMA_KEEP_ALIVE
+        value: 5m
+      - key: CHAT_MODEL
+        value: qwen2.5:3b
+      - key: EMBED_MODEL
+        value: bge-m3
+      - key: EMBED_DIM
+        value: "1024"
+      - key: NUM_CTX
+        value: "4096"
+      - key: TEMPERATURE
+        value: "0.0"
+      - key: NUM_PREDICT
+        value: "512"
+      - key: CHUNK_SIZE
+        value: "1000"
+      - key: CHUNK_OVERLAP
+        value: "200"
+      - key: TOP_K
+        value: "4"
+      - key: SIM_THRESHOLD
+        value: "0.65"
+      - key: SIM_LOW
+        value: "0.50"
+      - key: MAX_UPLOAD_MB
+        value: "30"
+      - key: KEYCLOAK_URL
+        sync: false
+      - key: KEYCLOAK_JWKS_URL
+        sync: false
+      - key: KEYCLOAK_REALM
+        value: datatutor
+      - key: KEYCLOAK_CLIENT_ID
+        value: datatutor-web
+      - key: KEYCLOAK_AUDIENCE
+        value: datatutor-web
+      - key: CORS_ORIGINS
+        sync: false
+
+databases:
+  - name: datatutor-db
+    plan: free
+    postgresMajorVersion: "16"

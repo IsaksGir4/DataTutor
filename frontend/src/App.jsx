@@ -256,18 +256,19 @@ export default function App() {
 
   if (authError) {
     return (
-      <div style={{ padding: 40 }}>
+      <main className="page-state" role="alert">
         <h2>Error de Autenticación</h2>
         <p style={{ marginTop: 12, color: "#991b1b" }}>{authError}</p>
-      </div>
+      </main>
     );
   }
 
   if (!authReady) {
     return (
-      <div style={{ padding: 40 }}>
+      <main className="page-state" aria-live="polite">
+        <div className="loading-spinner" aria-hidden="true" />
         <p>Verificando sesión segura con Keycloak (OIDC + PKCE S256)...</p>
-      </div>
+      </main>
     );
   }
 
@@ -281,6 +282,7 @@ export default function App() {
             className="btn btn-primary"
             onClick={handleNewConversation}
             disabled={sending}
+            aria-label="Iniciar una nueva conversación"
           >
             + Nuevo Chat
           </button>
@@ -297,6 +299,7 @@ export default function App() {
             type="button"
             className="btn btn-secondary"
             onClick={logoutUser}
+            aria-label="Cerrar sesión"
           >
             Salir
           </button>
@@ -306,13 +309,22 @@ export default function App() {
           <div className="section-title">Historial de Conversaciones</div>
           <div className="item-list">
             {conversations.length === 0 && (
-              <div className="doc-meta">Sin conversaciones guardadas.</div>
+              <div className="empty-list-message">Sin conversaciones guardadas.</div>
             )}
             {conversations.map((c) => (
               <div
                 key={c.id}
                 className={`list-item ${activeConvId === c.id ? "active" : ""}`}
                 onClick={() => handleSelectConversation(c.id)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleSelectConversation(c.id);
+                  }
+                }}
+                aria-current={activeConvId === c.id ? "true" : undefined}
               >
                 <span
                   style={{
@@ -328,6 +340,7 @@ export default function App() {
                   type="button"
                   className="btn btn-danger"
                   title="Eliminar conversación"
+                  aria-label={`Eliminar conversación: ${c.title}`}
                   onClick={(e) => handleDeleteConversation(e, c.id)}
                 >
                   ✕
@@ -355,11 +368,17 @@ export default function App() {
             style={{ width: "100%", marginBottom: 10 }}
             disabled={uploading}
             onClick={() => fileInputRef.current?.click()}
+            aria-label={`Subir documento PDF de máximo ${MAX_UPLOAD_MB} MB`}
           >
             {uploading ? "Subiendo PDF..." : "Subir Documento PDF"}
           </button>
 
           <div className="item-list" style={{ maxHeight: 280 }}>
+            {documents.length === 0 && (
+              <div className="empty-list-message">
+                Aún no hay documentos disponibles.
+              </div>
+            )}
             {documents.map((doc) => (
               <div key={doc.id} className="list-item" style={{ cursor: "default" }}>
                 <div style={{ overflow: "hidden", flex: 1 }}>
@@ -399,6 +418,7 @@ export default function App() {
                       type="button"
                       className="btn btn-danger"
                       title="Eliminar documento propio"
+                      aria-label={`Eliminar documento: ${doc.filename}`}
                       disabled={deletingDocId === doc.id}
                       onClick={() => handleDeleteDocument(doc.id)}
                     >
@@ -413,12 +433,13 @@ export default function App() {
 
       <main className="chat-main">
         {errorBanner && (
-          <div className="alert-banner">
+          <div className="alert-banner" role="alert" aria-live="assertive">
             <span>⚠️ {errorBanner}</span>
             <button
               type="button"
               className="btn btn-secondary"
               onClick={() => setErrorBanner(null)}
+              aria-label="Cerrar mensaje de error"
             >
               Cerrar
             </button>
@@ -427,20 +448,14 @@ export default function App() {
 
         <div className="messages-container">
           {loadingMessages ? (
-            <div style={{ color: "#64748b", margin: "auto" }}>
+            <div className="empty-state" aria-live="polite">
+              <div className="loading-spinner" aria-hidden="true" />
               Cargando mensajes de la conversación...
             </div>
           ) : messages.length === 0 ? (
-            <div
-              style={{
-                color: "#64748b",
-                margin: "auto",
-                textAlign: "center",
-                maxWidth: 500,
-              }}
-            >
+            <div className="empty-state">
               <h3>Bienvenido a DataTutor</h3>
-              <p style={{ marginTop: 8, fontSize: "0.9rem" }}>
+              <p>
                 Formula una pregunta técnica sobre los documentos cargados en PostgreSQL + pgvector.
                 El agente citará los fragmentos utilizados o rechazará explícitamente la consulta si carece de evidencia.
               </p>
@@ -499,7 +514,8 @@ export default function App() {
           )}
 
           {sending && (
-            <div className="message-card message-assistant">
+            <div className="message-card message-assistant" role="status" aria-live="polite">
+              <span className="loading-spinner small" aria-hidden="true" />
               Ejecutando grafo LangGraph (clasificación → búsqueda pgvector → juez de suficiencia)...
             </div>
           )}
@@ -510,6 +526,7 @@ export default function App() {
           <input
             type="text"
             className="chat-input"
+            aria-label="Pregunta para DataTutor"
             placeholder="Escribe una pregunta sobre ingeniería de datos, ciencia de datos o bases de datos..."
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
@@ -520,6 +537,7 @@ export default function App() {
             type="submit"
             className="btn btn-primary"
             disabled={sending || loadingMessages || question.trim().length < 2}
+            aria-label="Enviar pregunta"
           >
             {sending ? "Consultando..." : "Enviar"}
           </button>
