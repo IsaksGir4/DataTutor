@@ -1,6 +1,7 @@
 import json
 
 import logging
+import json
 import re
 import unicodedata
 
@@ -67,13 +68,23 @@ def _has_direct_lexical_evidence(
 
     # Una sola palabra específica puede ser suficiente cuando la pregunta
     # está formada por términos genéricos, por ejemplo "ciencia de datos".
+    def term_matches(term: str, context_terms: set[str]) -> bool:
+        if term in context_terms:
+            return True
+        return len(term) >= 7 and any(
+            context_term.startswith(term[:6])
+            or term.startswith(context_term[:6])
+            for context_term in context_terms
+            if len(context_term) >= 6
+        )
+
     if len(question_terms) < 2:
         if not question_terms:
             return False
         context_terms: set[str] = set()
         for chunk in retrieved:
             context_terms.update(_normalized_tokens(chunk.get("text", "")))
-        return next(iter(question_terms)) in context_terms
+        return term_matches(next(iter(question_terms)), context_terms)
 
     context_terms: set[str] = set()
 
@@ -82,7 +93,10 @@ def _has_direct_lexical_evidence(
             _normalized_tokens(chunk.get("text", ""))
         )
 
-    matches = question_terms.intersection(context_terms)
+    matches = {
+        term for term in question_terms
+        if term_matches(term, context_terms)
+    }
 
     return (
         len(matches) >= 2

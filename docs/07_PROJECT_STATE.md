@@ -44,7 +44,7 @@
 
 **Qué funciona hoy.**
 
-- **[PROBADO]** Backend protegido con JWT, aislamiento por usuario, subida/listado/borrado de PDFs con estados, historial de conversaciones y `pytest` (9 pruebas; última corrida: `9 passed in 6.32s`).
+- **[PROBADO]** Backend protegido con JWT, aislamiento por usuario, subida/listado/borrado de PDFs con estados, historial de conversaciones y `pytest` (10 pruebas; última corrida: `10 passed in 4.74s`).
 - **[PROBADO]** Separación de entornos: `.env` local restaurado apuntando al PostgreSQL de Docker (`127.0.0.1:5432/datatutor`), y credenciales de nube aisladas en `.env.render` (ignorado por `.gitignore` mediante `.env.*`).
 - **[PROBADO]** Validador `normalize_database_url` en `backend/app/config/settings.py`: convierte `postgres://` y `postgresql://` a `postgresql+psycopg://` sin alterar la URL local.
 - **[PROBADO]** Índice vectorial `idx_embedding_hnsw` (`postgresql_using="hnsw"`) confirmado en `backend/app/repositories/models.py` (líneas 108–111), por lo que `init_database()` crea tablas e índice HNSW automáticamente en una base vacía como la de Render.
@@ -458,6 +458,7 @@ Existe `backend/datatutor_pre_reembedding.dump` (298 kB, anterior al re-embeddin
 * Corrida posterior a la recuperación híbrida y la prueba de conceptos específicos: `6 passed in 6.88s`.
 * Se añadió un respaldo determinista antes del juez LLM: evidencia textual directa en fragmentos `ready` acepta el contexto sin depender de una segunda llamada al modelo.
 * Se añadió normalización de tildes y prefijos controlados para recuperar coincidencias como `ingenieria` → `ingeniería`, además de pruebas para preguntas como `ciencia de datos`.
+* Se alineó la validación léxica con la búsqueda por prefijos para aceptar variantes morfológicas como `relacional` → `relacionales`; también se corrigió la importación de `json` usada por la clasificación de intención.
 * `frontend`: `npm run build` correcto después de la interfaz ciberpunk, la mascota y el estado `Pensando...`; `npm run lint` sin errores.
 
 
@@ -543,6 +544,7 @@ tests/test_api_contracts.py::test_conversation_lifecycle_and_cross_user_isolatio
 | Consulta sobre un PDF recién cargado terminaba en `rejected` después de ~27 s | La recuperación dependía solo de similitud vectorial y el juez podía descartar términos específicos; además, el frontend permitía preguntar durante la indexación | Recuperación híbrida vectorial + textual, filtro de documentos `ready`, respaldo léxico desde `SIM_LOW` y bloqueo de preguntas durante `pending`/`processing` |
 | Mascota cubría el mensaje `Pensando...` | El componente compacto estaba en la misma fila que el texto y su transformación salía de su caja visual | Mascota reubicada en un bloque independiente encima del texto, con tamaño reservado y comportamiento responsive |
 | Todas las preguntas terminaban rechazadas aunque los PDFs aparecieran `READY` | El respaldo textual solo se evaluaba después del juez LLM; consultas con baja similitud o diferencias de tildes quedaban rechazadas. En el entorno de diagnóstico también se comprobó que Ollama no estaba instalado/activo y la base local tenía 0 documentos y 0 chunks | Evidencia textual directa aceptada antes del juez, búsqueda insensible a tildes/prefijos, pruebas nuevas y diagnóstico explícito de que Ollama debe estar activo con `qwen2.5:3b` y `bge-m3` |
+| `¿Qué es una base de datos relacional?` terminaba en `rejected` pese a devolver `200 OK` | La recuperación aceptaba prefijos, pero la validación de evidencia exigía coincidencia exacta; `relacional` no coincidía con `relacionales` en los fragmentos | Validación léxica con prefijos controlados y prueba de regresión para la variante plural |
 
 **Secciones de la guía definitiva que quedaron superadas:** el flujo con el umbral 0.45 para decidir entre aclarar y rechazar (§7), el pendiente de `save_history` ficticio, el de frontend/API sin validar y el de la ruta clara-sin-evidencia → `clarify`. El resto (arranque, respaldo, re-embedding) sigue vigente.
 

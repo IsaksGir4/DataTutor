@@ -54,6 +54,22 @@ def test_lexical_evidence_accepts_one_specific_term_with_generic_question():
     )
 
 
+def test_lexical_evidence_accepts_plural_variant_of_specific_term():
+    retrieved = [
+        {
+            "text": (
+                "Las bases de datos relacionales organizan la información "
+                "en tablas relacionadas."
+            )
+        }
+    ]
+
+    assert _has_direct_lexical_evidence(
+        "¿Qué es una base de datos relacional?",
+        retrieved,
+    )
+
+
 def test_grade_context_accepts_direct_pdf_evidence_without_calling_llm_judge():
     state = {
         "question": "¿Qué es la ciencia de datos?",
