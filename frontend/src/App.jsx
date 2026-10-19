@@ -5,6 +5,32 @@ import { api } from "./services/api";
 const MAX_UPLOAD_MB = Number(import.meta.env.VITE_MAX_UPLOAD_MB || 30);
 const MAX_UPLOAD_BYTES = MAX_UPLOAD_MB * 1024 * 1024;
 
+function DataTutorMascot({ compact = false }) {
+  return (
+    <div
+      className={`mascot ${compact ? "mascot-compact" : ""}`}
+      role="img"
+      aria-label="Mascota robótica de DataTutor"
+    >
+      <div className="mascot-aura" aria-hidden="true" />
+      <div className="mascot-antenna" aria-hidden="true">
+        <span />
+      </div>
+      <div className="mascot-screen">
+        <span className="mascot-eye mascot-eye-left" />
+        <span className="mascot-eye mascot-eye-right" />
+        <span className="mascot-mouth" />
+      </div>
+      <div className="mascot-body">
+        <span className="mascot-chip">DT</span>
+        <span className="mascot-scanline" />
+      </div>
+      <span className="mascot-foot mascot-foot-left" aria-hidden="true" />
+      <span className="mascot-foot mascot-foot-right" aria-hidden="true" />
+    </div>
+  );
+}
+
 export default function App() {
   const [authReady, setAuthReady] = useState(false);
   const [authError, setAuthError] = useState(null);
@@ -471,11 +497,7 @@ export default function App() {
             </div>
           ) : messages.length === 0 ? (
             <div className="empty-state">
-              <div className="hero-orbit" aria-hidden="true">
-                <div className="orbit-ring orbit-ring-one" />
-                <div className="orbit-ring orbit-ring-two" />
-                <div className="orbit-core">DT</div>
-              </div>
+              <DataTutorMascot />
               <span className="eyebrow">RAG // READY TO QUERY</span>
               <h3>Explora tu conocimiento</h3>
               <p>
@@ -540,9 +562,12 @@ export default function App() {
           )}
 
           {sending && (
-            <div className="message-card message-assistant" role="status" aria-live="polite">
-              <span className="loading-spinner small" aria-hidden="true" />
-              Ejecutando grafo LangGraph (clasificación → búsqueda pgvector → juez de suficiencia)...
+            <div className="message-card message-assistant thinking-message" role="status" aria-live="polite">
+              <DataTutorMascot compact />
+              <div className="thinking-copy">
+                <strong>Pensando<span className="thinking-dots" aria-hidden="true">...</span></strong>
+                <span>DataTutor está consultando su memoria documental</span>
+              </div>
             </div>
           )}
           <div ref={messagesEndRef} />
