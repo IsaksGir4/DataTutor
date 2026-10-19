@@ -276,7 +276,13 @@ export default function App() {
     <div className="app-layout">
       <aside className="sidebar">
         <div className="brand-header">
-          <span className="brand-title">DataTutor RAG</span>
+          <div className="brand-lockup">
+            <div className="brand-mark" aria-hidden="true">DT</div>
+            <div>
+              <span className="brand-title">DataTutor</span>
+              <span className="brand-subtitle">DATA ENGINEERING LAB</span>
+            </div>
+          </div>
           <button
             type="button"
             className="btn btn-primary"
@@ -295,6 +301,7 @@ export default function App() {
               Roles: {userProfile?.roles?.join(", ") || "user"}
             </div>
           </div>
+          <span className="online-dot" title="Sesión activa" aria-label="Sesión activa" />
           <button
             type="button"
             className="btn btn-secondary"
@@ -432,6 +439,16 @@ export default function App() {
       </aside>
 
       <main className="chat-main">
+        <header className="workspace-header">
+          <div>
+            <span className="eyebrow">KNOWLEDGE OPERATIONS / 01</span>
+            <h1>{activeConvId ? "Conversación activa" : "Centro de conocimiento"}</h1>
+          </div>
+          <div className="system-status">
+            <span className="status-pulse" aria-hidden="true" />
+            <span>SISTEMA OPERATIVO</span>
+          </div>
+        </header>
         {errorBanner && (
           <div className="alert-banner" role="alert" aria-live="assertive">
             <span>⚠️ {errorBanner}</span>
@@ -454,11 +471,20 @@ export default function App() {
             </div>
           ) : messages.length === 0 ? (
             <div className="empty-state">
-              <h3>Bienvenido a DataTutor</h3>
+              <div className="hero-orbit" aria-hidden="true">
+                <div className="orbit-ring orbit-ring-one" />
+                <div className="orbit-ring orbit-ring-two" />
+                <div className="orbit-core">DT</div>
+              </div>
+              <span className="eyebrow">RAG // READY TO QUERY</span>
+              <h3>Explora tu conocimiento</h3>
               <p>
-                Formula una pregunta técnica sobre los documentos cargados en PostgreSQL + pgvector.
-                El agente citará los fragmentos utilizados o rechazará explícitamente la consulta si carece de evidencia.
+                Formula una pregunta sobre ingeniería de datos, bases de datos o ciencia de datos.
+                DataTutor buscará evidencia en tu base documental y mostrará sus fuentes.
               </p>
+              <div className="pipeline-preview" aria-label="Flujo del agente">
+                <span>INGEST</span><i>→</i><span>EMBED</span><i>→</i><span>RETRIEVE</span><i>→</i><span>ANSWER</span>
+              </div>
             </div>
           ) : (
             messages.map((m) => (

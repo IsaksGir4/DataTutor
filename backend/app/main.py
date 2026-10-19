@@ -24,7 +24,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="DataTutor API", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title="DataTutor", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

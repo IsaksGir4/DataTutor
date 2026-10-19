@@ -119,7 +119,7 @@ La documentación de requisitos, arquitectura, grafo, contrato de API, modelo de
 El plan de despliegue es:
 
 - **Vercel:** frontend Vite desde `frontend/`, con las variables `VITE_API_BASE_URL`, `VITE_KEYCLOAK_URL`, `VITE_KEYCLOAK_REALM` y `VITE_KEYCLOAK_CLIENT_ID`.
-- **Render:** backend FastAPI desde `backend/`, usando `render.yaml` y PostgreSQL administrado con `pgvector`.
+- **Render:** una base PostgreSQL administrada con `pgvector` y un **Web Service** FastAPI desde `backend/`. El equipo puede configurar ambos manualmente desde el panel; `render.yaml` queda como alternativa reproducible.
 
 Publicar únicamente Vercel y Render no es suficiente para el flujo completo: Render no puede acceder al Ollama instalado en el computador ni al Keycloak local. Para una demo pública se necesita además una URL accesible de Keycloak y un servicio Ollama/inferencia accesible desde Render. `OLLAMA_URL=http://127.0.0.1:11434` solo es válido en la demostración local.
 
