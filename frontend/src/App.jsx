@@ -570,7 +570,9 @@ export default function App() {
 
           {sending && (
             <div className="message-card message-assistant thinking-message" role="status" aria-live="polite">
-              <DataTutorMascot compact />
+              <div className="thinking-mascot" aria-hidden="true">
+                <DataTutorMascot compact />
+              </div>
               <div className="thinking-copy">
                 <strong>Pensando<span className="thinking-dots" aria-hidden="true">...</span></strong>
                 <span>DataTutor está consultando su memoria documental</span>

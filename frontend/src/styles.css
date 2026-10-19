@@ -332,7 +332,23 @@ body::before {
 .mascot-compact .mascot-body { top: 21px; left: 11px; }
 .mascot-compact .mascot-foot-left { top: 28px; left: 10px; }
 .mascot-compact .mascot-foot-right { top: 28px; right: 10px; }
-.thinking-message { display: flex; align-items: center; gap: 2px; min-width: 280px; }
+.thinking-message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 280px;
+  padding-top: 10px;
+}
+.thinking-mascot {
+  width: 64px;
+  height: 52px;
+  overflow: visible;
+}
+.thinking-mascot .mascot-compact {
+  transform: scale(.46);
+  transform-origin: top left;
+}
 .thinking-copy { display: flex; flex-direction: column; gap: 2px; line-height: 1.35; }
 .thinking-copy strong { color: #fff0f2; font-size: .9rem; }
 .thinking-copy > span { color: var(--muted); font-family: var(--mono); font-size: .62rem; }
