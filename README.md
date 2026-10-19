@@ -134,3 +134,10 @@ URLs públicas registradas:
 - Frontend: https://data-tutor.vercel.app/
 - Backend: https://datatutor.onrender.com
 - Health check: https://datatutor.onrender.com/api/v1/health
+
+## Entregables
+
+- [Documento técnico en PDF](docs/entregables/Documento_Tecnico_DataTutor.pdf)
+- [Presentación en PDF](docs/entregables/DataTutor_Presentacion.pdf)
+- [Documento técnico editable](docs/08_DOCUMENTO_TECNICO.md)
+- [Guía de despliegue](docs/09_GUIA_DESPLIEGUE.md)

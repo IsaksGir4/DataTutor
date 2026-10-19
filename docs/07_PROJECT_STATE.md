@@ -53,7 +53,7 @@
 
 **Qué cambió el 18 oct (rama `evilnightmare010-analyze-agent-project`, commits `22f64a0`, `0553f78`, `bb8813d` y `bd3db88`).** `README.md` raíz, rediseño del frontend con identidad de Ingeniería de Datos y posterior estética ciberpunk oscura con rojo neón, mejoras de accesibilidad y diseño responsive, mascota robótica animada, estado conversacional `Pensando...`, bloqueo de envío mientras hay PDFs en `pending`/`processing`, recuperación híbrida vectorial + textual para documentos recién cargados, filtro de documentos `ready`, `render.yaml`, `frontend/vercel.json`, `docs/08_DOCUMENTO_TECNICO.md` y `docs/09_GUIA_DESPLIEGUE.md`, captura en `docs/evidencias/aplicacion-actual.png`, `init_database()` en `core/database.py`, `llm/chat.py` leyendo el modelo y parámetros desde `settings` y metadatos oficiales `DataTutor`.
 
-**Qué falta.** Ejecutar el runner de evaluación con métricas sobre `eval/questions.jsonl`, completar la tabla de corpus y exportar el documento técnico a PDF, diagrama gráfico, diapositivas y ensayo de la demo con el extracto de la tesis. Las URLs públicas ya están registradas y verificadas para carga del frontend y salud del backend.
+**Qué falta.** Ejecutar el runner de evaluación con métricas sobre `eval/questions.jsonl`, completar la tabla de corpus y ensayar la demo con el extracto de la tesis. El documento técnico y las diapositivas ya están incorporados en `docs/entregables/`; las URLs públicas están registradas y verificadas para carga del frontend y salud del backend.
 
 **Riesgos principales (detalle en §17).**
 
@@ -109,6 +109,7 @@ PostgreSQL 16 + pgvector  127.0.0.1:5432   (DB datatutor; Keycloak usa la DB key
 * Contenedores Docker: `datatutor-postgres`, `datatutor-keycloak`. Volumen de datos: `datatutor-pgdata`.
 * Separación IPv4/identidad: el navegador usa `localhost` (coincide con `redirectUris`, `webOrigins` y el claim `iss`); backend ↔ Keycloak/API usan `127.0.0.1` para evitar la demora IPv6 en Windows.
 * **Despliegue público registrado (Anexo A):** frontend en [Vercel](https://data-tutor.vercel.app/), backend en [Render](https://datatutor.onrender.com) y health check en [`/api/v1/health`](https://datatutor.onrender.com/api/v1/health). Keycloak y Ollama permanecen locales, por lo que la demo completa es local.
+* **Entregables incorporados:** `docs/entregables/Documento_Tecnico_DataTutor.pdf` y `docs/entregables/DataTutor_Presentacion.pdf`.
 
 ---
 
@@ -595,11 +596,11 @@ Contrastar siempre contra `trabajo_agente.pdf` y `04_API_CONTRATO.md`; esta tabl
 | Carga de documentos propios con estados asíncronos y borrado | [PROBADO] |
 | Aislamiento entre usuarios | [PROBADO] |
 | README | [IMPLEMENTADO] (integrado en `main` en commit `77a6ac2`) |
-| Documento técnico (14 apartados) | [IMPLEMENTADO] en Markdown (`docs/08`); [PENDIENTE] asignatura, corpus, métricas, URLs y PDF |
+| Documento técnico (14 apartados) | [PROBADO] en Markdown (`docs/08`) y PDF (`docs/entregables/Documento_Tecnico_DataTutor.pdf`), con integrantes, asignatura, URLs públicas y 14 apartados |
 | Conjunto de evaluación con métricas | [PENDIENTE] (`eval/questions.jsonl` existe; falta ejecutar el runner y anexar resultados) |
 | CI | [PENDIENTE] |
-| Despliegue público (Render + Vercel) | [EN CURSO] (`render.yaml`, `settings.py` y `vercel.json` listos; falta levantar en paneles) |
-| Diagrama, diapositivas | [PENDIENTE] |
+| Despliegue público (Render + Vercel) | [PROBADO parcialmente] Vercel carga y Render responde `GET /api/v1/health` con `200 OK`; la demo RAG completa continúa local |
+| Diagrama, diapositivas | [PROBADO] Presentación PDF incorporada en `docs/entregables/DataTutor_Presentacion.pdf` con 9 láminas |
 | Ensayo de la sustentación presencial (demo en local) | [PENDIENTE] |
 
 ---
