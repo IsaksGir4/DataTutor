@@ -2,15 +2,16 @@ services:
   - type: web
     name: datatutor-api
     runtime: python
+    plan: free
     rootDir: backend
     buildCommand: pip install uv && uv sync --frozen
     startCommand: uv run uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/v1/health
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
       - key: DATABASE_URL
-        fromDatabase:
-          name: datatutor-db
-          property: connectionString
+        sync: false
       - key: OLLAMA_URL
         sync: false
       - key: OLLAMA_KEEP_ALIVE
@@ -51,8 +52,3 @@ services:
         value: datatutor-web
       - key: CORS_ORIGINS
         sync: false
-
-databases:
-  - name: datatutor-db
-    plan: free
-    postgresMajorVersion: "16"

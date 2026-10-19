@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Optional
 
-from pydantic import Field, model_validator
+from pydantic import Field, model_validator, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # TutorDatos/.env
@@ -77,6 +77,14 @@ class Settings(BaseSettings):
                 "CHUNK_OVERLAP debe ser menor que CHUNK_SIZE"
             )
         return self
+
+    @field_validator("DATABASE_URL")
+    @classmethod
+    def normalize_database_url(cls, v: str) -> str:
+        for old in ("postgres://", "postgresql://"):
+            if v.startswith(old):
+                return v.replace(old, "postgresql+psycopg://", 1)
+        return v
 
 
 settings = Settings()
