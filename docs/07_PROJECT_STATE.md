@@ -635,6 +635,7 @@ git ls-files | grep -E '\.(pdf|dump)$|(^|/)\.env$' || echo "OK: nada sensible ve
 
 ## 21. Próximas acciones
 
+<<<<<<< HEAD
 **Orden sugerido para cerrar hoy (la entrega es el 18 oct):**
 
 1. **Mezclar la rama del equipo** con el procedimiento de §19 (respaldo, `--no-commit`, `pytest`, `lint`, `build`, prueba de humo), y `git push`.
@@ -646,6 +647,18 @@ git ls-files | grep -E '\.(pdf|dump)$|(^|/)\.env$' || echo "OK: nada sensible ve
 7. **Demo:** extracto de la tesis con texto seleccionable, subida desde la UI y pregunta sobre su contenido; guion con rechazo incluido; ensayar en local con Ollama en CPU y precalentar el modelo.
 8. **Diagrama y diapositivas.**
 9. **Después de entregar o si sobra tiempo:** revisar "automatización en ML", citas `[n]` y *grounding*, `rewrite_query`, CI, latencia por nodo, convertir `INTELIGENCIA_ARTIFICIAL` a `global`, comparación de embeddings.
+=======
+1. **Git (hoy):** comprobar `.gitignore`, revisar los cambios y preparar commits pequeños; no incluir PDFs ni secretos.
+2. **Corpus:** decidir el `scope` de los libros antes de ingerir el resto; respaldar la BD; ingerir los libros restantes por `scripts/ingest_corpus.py`; validar muestra de embeddings.
+3. **Pruebas del respaldo léxico** con fakes (sin LLM) y registrar `uv run pytest -v` completo.
+4. **Revisar citas y *grounding*** de las respuestas (§15) y la posible falla de "automatización en ML".
+5. **Calibración** con `eval/questions.jsonl`; registrar métricas y latencia por nodo.
+6. **Demo:** extracto de la tesis con texto seleccionable, subida desde la UI y pregunta sobre su contenido; guion con rechazo incluido; ensayar en local.
+7. **Documentación:** README raíz y `docs/08_DOCUMENTO_TECNICO.md` actualizados con arranque local, ingesta, límites, seguridad, flujo RAG y los 14 apartados; integrantes y captura inicial registrados; faltan convertir el documento a PDF y completar URLs públicas y capturas del despliegue.
+8. **Despliegue:** publicar frontend en Vercel y backend/pgvector en Render; para la estrategia elegida, verificar URLs públicas y `/health`, pero ejecutar la demo completa localmente porque Keycloak y Ollama locales no son visibles desde internet.
+9. **Recuperación tras carga de PDF:** la búsqueda combina similitud vectorial con coincidencias textuales de términos específicos y solo consulta fragmentos de documentos `ready`; mientras un PDF está en `pending` o `processing`, el frontend bloquea nuevas preguntas y muestra el estado de indexación.
+8. **Opcional:** despliegue público y comparación de embeddings, solo si hay tiempo y fuera del campus.
+>>>>>>> origin/evilnightmare010-analyze-agent-project
 
 ---
 

@@ -5,6 +5,32 @@ import { api } from "./services/api";
 const MAX_UPLOAD_MB = Number(import.meta.env.VITE_MAX_UPLOAD_MB || 30);
 const MAX_UPLOAD_BYTES = MAX_UPLOAD_MB * 1024 * 1024;
 
+function DataTutorMascot({ compact = false }) {
+  return (
+    <div
+      className={`mascot ${compact ? "mascot-compact" : ""}`}
+      role="img"
+      aria-label="Mascota robótica de DataTutor"
+    >
+      <div className="mascot-aura" aria-hidden="true" />
+      <div className="mascot-antenna" aria-hidden="true">
+        <span />
+      </div>
+      <div className="mascot-screen">
+        <span className="mascot-eye mascot-eye-left" />
+        <span className="mascot-eye mascot-eye-right" />
+        <span className="mascot-mouth" />
+      </div>
+      <div className="mascot-body">
+        <span className="mascot-chip">DT</span>
+        <span className="mascot-scanline" />
+      </div>
+      <span className="mascot-foot mascot-foot-left" aria-hidden="true" />
+      <span className="mascot-foot mascot-foot-right" aria-hidden="true" />
+    </div>
+  );
+}
+
 export default function App() {
   const [authReady, setAuthReady] = useState(false);
   const [authError, setAuthError] = useState(null);
@@ -30,6 +56,7 @@ export default function App() {
   const hasPendingDocs = documents.some(
     (d) => d.status === "pending" || d.status === "processing"
   );
+  const canAskQuestion = !sending && !loadingMessages && !hasPendingDocs;
 
   useEffect(() => {
     if (didLoadRef.current) return;
@@ -141,7 +168,7 @@ export default function App() {
   async function handleSendQuestion(e) {
     e.preventDefault();
     const trimmed = question.trim();
-    if (trimmed.length < 2 || sending) return;
+    if (trimmed.length < 2 || !canAskQuestion) return;
 
     setErrorBanner(null);
     setSending(true);
@@ -379,6 +406,12 @@ export default function App() {
           >
             {uploading ? "Subiendo PDF..." : "Subir Documento PDF"}
           </button>
+          {hasPendingDocs && (
+            <div className="processing-notice" role="status" aria-live="polite">
+              <span className="loading-spinner small" aria-hidden="true" />
+              Indexando el documento. Podrás consultarlo cuando aparezca como READY.
+            </div>
+          )}
 
           <div className="item-list" style={{ maxHeight: 280 }}>
             {documents.length === 0 && (
@@ -471,11 +504,7 @@ export default function App() {
             </div>
           ) : messages.length === 0 ? (
             <div className="empty-state">
-              <div className="hero-orbit" aria-hidden="true">
-                <div className="orbit-ring orbit-ring-one" />
-                <div className="orbit-ring orbit-ring-two" />
-                <div className="orbit-core">DT</div>
-              </div>
+              <DataTutorMascot />
               <span className="eyebrow">RAG // READY TO QUERY</span>
               <h3>Explora tu conocimiento</h3>
               <p>
@@ -540,9 +569,12 @@ export default function App() {
           )}
 
           {sending && (
-            <div className="message-card message-assistant" role="status" aria-live="polite">
-              <span className="loading-spinner small" aria-hidden="true" />
-              Ejecutando grafo LangGraph (clasificación → búsqueda pgvector → juez de suficiencia)...
+            <div className="message-card message-assistant thinking-message" role="status" aria-live="polite">
+              <DataTutorMascot compact />
+              <div className="thinking-copy">
+                <strong>Pensando<span className="thinking-dots" aria-hidden="true">...</span></strong>
+                <span>DataTutor está consultando su memoria documental</span>
+              </div>
             </div>
           )}
           <div ref={messagesEndRef} />
@@ -556,13 +588,13 @@ export default function App() {
             placeholder="Escribe una pregunta sobre ingeniería de datos, ciencia de datos o bases de datos..."
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
-            disabled={sending || loadingMessages}
+            disabled={!canAskQuestion}
             maxLength={2000}
           />
           <button
             type="submit"
             className="btn btn-primary"
-            disabled={sending || loadingMessages || question.trim().length < 2}
+            disabled={!canAskQuestion || question.trim().length < 2}
             aria-label="Enviar pregunta"
           >
             {sending ? "Consultando..." : "Enviar"}

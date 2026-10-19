@@ -106,7 +106,12 @@ def retrieve(state: AgentState) -> dict:
     embed_model = get_embeddings_model()
     vector = embed_model.embed_query(state["query"])
 
-    chunks = vector_search(vector, state["owner_id"], top_k=settings.TOP_K)
+    chunks = vector_search(
+        vector,
+        state["owner_id"],
+        top_k=settings.TOP_K,
+        query_text=state["query"],
+    )
     best_score = chunks[0]["score"] if chunks else 0.0
 
     return {"retrieved": chunks, "best_score": best_score}
@@ -174,10 +179,7 @@ def grade_context(state: AgentState) -> dict:
         state["retrieved"],
     )
 
-    if (
-        best_score >= settings.SIM_THRESHOLD
-        and has_direct_evidence
-    ):
+    if best_score >= settings.SIM_LOW and has_direct_evidence:
         logger.warning(
             "Se acepta el contexto por respaldo léxico: "
             "score=%.3f; el juez no lo declaró suficiente.",

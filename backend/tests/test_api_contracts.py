@@ -8,8 +8,25 @@ from app.core.database import SessionLocal
 from app.core.deps import get_current_user
 from app.main import app
 from app.repositories.models import Conversation, Message
+from app.agents.nodes.core import _has_direct_lexical_evidence
 
 client = TestClient(app)
+
+
+def test_lexical_evidence_accepts_specific_terms_from_uploaded_document():
+    retrieved = [
+        {
+            "text": (
+                "El principio de Newell describe una estrategia para resolver "
+                "problemas mediante la representación del conocimiento."
+            )
+        }
+    ]
+
+    assert _has_direct_lexical_evidence(
+        "¿Qué es el principio de Newell?",
+        retrieved,
+    )
 
 
 def test_health_and_openapi_expose_all_endpoints():
