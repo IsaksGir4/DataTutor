@@ -8,7 +8,7 @@ from app.core.database import SessionLocal
 from app.core.deps import get_current_user
 from app.main import app
 from app.repositories.models import Conversation, Message
-from app.agents.nodes.core import _has_direct_lexical_evidence
+from app.agents.nodes.core import _has_direct_lexical_evidence, grade_context
 
 client = TestClient(app)
 
@@ -27,6 +27,51 @@ def test_lexical_evidence_accepts_specific_terms_from_uploaded_document():
         "¿Qué es el principio de Newell?",
         retrieved,
     )
+
+
+def test_lexical_evidence_is_accent_insensitive_for_uploaded_documents():
+    retrieved = [
+        {
+            "text": (
+                "La ingeniería de datos diseña procesos para recopilar, "
+                "transformar y servir datos confiables."
+            )
+        }
+    ]
+
+    assert _has_direct_lexical_evidence(
+        "¿Qué es la ingenieria de datos?",
+        retrieved,
+    )
+
+
+def test_lexical_evidence_accepts_one_specific_term_with_generic_question():
+    retrieved = [{"text": "La ciencia de datos analiza información mediante modelos."}]
+
+    assert _has_direct_lexical_evidence(
+        "¿Qué es la ciencia de datos?",
+        retrieved,
+    )
+
+
+def test_grade_context_accepts_direct_pdf_evidence_without_calling_llm_judge():
+    state = {
+        "question": "¿Qué es la ciencia de datos?",
+        "retrieved": [
+            {
+                "text": "La ciencia de datos analiza información mediante modelos.",
+                "score": 0.56,
+            }
+        ],
+        "best_score": 0.56,
+        "retries": 0,
+    }
+
+    with patch(
+        "app.agents.nodes.core.get_chat_model",
+        side_effect=AssertionError("No debe llamar al juez con evidencia directa"),
+    ):
+        assert grade_context(state)["context_ok"] is True
 
 
 def test_health_and_openapi_expose_all_endpoints():

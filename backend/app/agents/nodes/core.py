@@ -65,9 +65,15 @@ def _has_direct_lexical_evidence(
         and token not in _GENERIC_TERMS
     }
 
-    # Sin al menos dos términos específicos no aceptamos por este respaldo.
+    # Una sola palabra específica puede ser suficiente cuando la pregunta
+    # está formada por términos genéricos, por ejemplo "ciencia de datos".
     if len(question_terms) < 2:
-        return False
+        if not question_terms:
+            return False
+        context_terms: set[str] = set()
+        for chunk in retrieved:
+            context_terms.update(_normalized_tokens(chunk.get("text", "")))
+        return next(iter(question_terms)) in context_terms
 
     context_terms: set[str] = set()
 
@@ -123,6 +129,20 @@ def grade_context(state: AgentState) -> dict:
     if best_score < settings.SIM_LOW:
         return {"context_ok": False}
 
+    # La evidencia textual directa no debe depender de otra llamada al LLM.
+    # Esto evita falsos rechazos cuando el juez devuelve JSON incorrecto o
+    # cuando un concepto del PDF tiene baja similitud semántica.
+    has_direct_evidence = _has_direct_lexical_evidence(
+        state["question"],
+        state["retrieved"],
+    )
+    if has_direct_evidence:
+        logger.info(
+            "Contexto aceptado por evidencia léxica directa: score=%.3f",
+            best_score,
+        )
+        return {"context_ok": True}
+
     # En el primer intento se exige SIM_THRESHOLD para consultar al juez.
     # Tras reescribir, el juez puede evaluar resultados desde SIM_LOW.
     should_run_judge = (
@@ -174,11 +194,6 @@ def grade_context(state: AgentState) -> dict:
 
     # Respaldo para falsos negativos y respuestas mal formadas:
     # solo con score alto y evidencia léxica directa.
-    has_direct_evidence = _has_direct_lexical_evidence(
-        state["question"],
-        state["retrieved"],
-    )
-
     if best_score >= settings.SIM_LOW and has_direct_evidence:
         logger.warning(
             "Se acepta el contexto por respaldo léxico: "
