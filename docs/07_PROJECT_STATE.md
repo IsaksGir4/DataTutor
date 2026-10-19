@@ -379,8 +379,10 @@ Existe `backend/datatutor_pre_reembedding.dump` (298 kB, anterior al re-embeddin
 - Se añadió un layout responsive para pantallas medianas y móviles, además de respeto por `prefers-reduced-motion`.
 - Se corrigió el arranque local de PostgreSQL: el backend crea la extensión `vector` y las tablas ORM si la base está vacía, evitando que una instalación nueva falle con `relation does not exist`.
 - Se registraron los tres integrantes en `docs/08_DOCUMENTO_TECNICO.md` y se incorporó la captura de la aplicación en `docs/evidencias/aplicacion-actual.png`.
-- Se preparó `render.yaml` para Render (API + PostgreSQL con pgvector) y `frontend/vercel.json` para la SPA de Vercel.
-- Se añadió `docs/09_GUIA_DESPLIEGUE.md` con el procedimiento de Render/Vercel y el guion de pruebas manuales.
+- Se preparó `render.yaml` como configuración reproducible alternativa para Render (API + PostgreSQL con pgvector) y `frontend/vercel.json` para la SPA de Vercel.
+- Se añadió `docs/09_GUIA_DESPLIEGUE.md` con el procedimiento manual mediante PostgreSQL + Web Service en Render, Vercel y el guion de pruebas manuales.
+- Se rediseñó el frontend con una identidad futurista de Ingeniería de Datos: tipografías técnicas, paneles de sistema, flujo visual `INGEST → EMBED → RETRIEVE → ANSWER`, fondo de cuadrícula, estados visuales y responsive conservando las funciones existentes.
+- Se estandarizó el nombre visible y técnico del agente como **DataTutor**: interfaz, título del navegador y metadatos de FastAPI.
 - El cliente de chat ahora consume `CHAT_MODEL`, `NUM_CTX` y `NUM_PREDICT` desde configuración, lo que permite ajustar el despliegue sin modificar código.
 
 ---

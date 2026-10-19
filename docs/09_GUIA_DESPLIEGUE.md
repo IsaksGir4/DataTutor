@@ -15,28 +15,57 @@ Esta guía corresponde a la decisión del equipo: publicar el frontend y el back
 
 ## 2. Backend y PostgreSQL en Render
 
-### Crear el servicio
+En este procedimiento no se utiliza **Blueprint**. Se crean por separado una base PostgreSQL y un **Web Service**.
 
-1. Entra a [render.com](https://render.com) y crea una cuenta o inicia sesión con GitHub.
-2. Selecciona **New → Blueprint** y elige el repositorio.
-3. Render detectará `render.yaml`.
-4. Confirma la creación del servicio `datatutor-api` y la base `datatutor-db`.
-5. Si Render solicita el plan de la base, usa el plan gratuito disponible para la práctica o el plan que el equipo tenga autorizado.
+### Crear la base de datos
 
-### Configurar PostgreSQL
+1. En el panel de Render selecciona **New → PostgreSQL**.
+2. Usa:
+   - **Name:** `datatutor-db`
+   - **Database:** `datatutor`
+   - **User:** el valor sugerido por Render
+   - **Region:** la más cercana al equipo
+   - **PostgreSQL Version:** 16 si está disponible
+   - **Plan:** el gratuito disponible para la práctica
+3. Pulsa **Create Database**.
+4. Espera hasta que el estado sea **Available**.
+5. Abre la base y copia la **Internal Database URL**. Se utilizará como `DATABASE_URL` en el Web Service.
 
-Después de crear la base:
+Después activa pgvector con la conexión indicada por Render:
 
-1. Abre la base `datatutor-db`.
-2. Copia el **PSQL Command** de la página de información.
-3. Conéctate desde una terminal con `psql`.
-4. Ejecuta:
+```sql
+CREATE EXTENSION IF NOT EXISTS vector;
+```
 
-   ```sql
-   CREATE EXTENSION IF NOT EXISTS vector;
+Comprueba que no haya error antes de crear el backend.
+
+### Crear el Web Service
+
+1. En el panel de Render selecciona **New → Web Service**.
+2. Conecta GitHub y autoriza el repositorio `IsaksGir4/DataTutor`.
+3. Selecciona la rama que contiene los cambios.
+4. En **Root Directory**, escribe:
+
+   ```text
+   backend
    ```
 
-El backend crea las tablas ORM al iniciar, pero la extensión `vector` debe existir antes de intentar guardar embeddings.
+5. Configura:
+
+   | Campo | Valor |
+   |---|---|
+   | Name | `datatutor-api` |
+   | Language/Runtime | `Python 3` |
+   | Region | La misma región de PostgreSQL |
+   | Build Command | `pip install uv && uv sync --frozen` |
+   | Start Command | `uv run uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
+   | Health Check Path | `/api/v1/health` |
+   | Plan | El gratuito disponible |
+
+6. Pulsa **Advanced** y agrega las variables de entorno antes de crear el servicio.
+7. Pulsa **Create Web Service**.
+
+Render ignorará el `render.yaml` durante este flujo manual; el archivo se conserva como configuración reproducible alternativa.
 
 ### Variables del backend
 
@@ -44,7 +73,7 @@ En el servicio `datatutor-api`, agrega o revisa:
 
 | Variable | Valor para esta estrategia |
 |---|---|
-| `DATABASE_URL` | Se completa desde la base de Render |
+| `DATABASE_URL` | **Internal Database URL** de `datatutor-db` |
 | `OLLAMA_URL` | URL reservada/no funcional para la publicación técnica; el chat público no se anuncia como operativo |
 | `CHAT_MODEL` | `qwen2.5:3b` |
 | `EMBED_MODEL` | `bge-m3` |
