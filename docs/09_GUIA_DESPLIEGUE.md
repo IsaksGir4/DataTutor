@@ -2,6 +2,14 @@
 
 Esta guía corresponde a la decisión del equipo: publicar el frontend y el backend para obtener URLs públicas, pero mantener la demostración funcional completa con Keycloak, Ollama y el corpus local. Por eso, las URLs públicas deben presentarse como evidencia de publicación y salud del servicio, mientras que la demo de login, chat y carga se ejecuta localmente.
 
+## URLs públicas registradas
+
+- **Frontend:** https://data-tutor.vercel.app/
+- **Backend:** https://datatutor.onrender.com
+- **Health check verificado:** https://datatutor.onrender.com/api/v1/health → `200 OK`
+
+Estas URLs demuestran la publicación de los servicios. La demostración completa del agente se realiza localmente mientras Keycloak y Ollama no estén publicados y accesibles desde Render.
+
 ## 1. Preparación en GitHub
 
 1. Confirma que el repositorio no incluya `.env`, PDFs del corpus, volcados `.dump` ni `frontend/node_modules`.

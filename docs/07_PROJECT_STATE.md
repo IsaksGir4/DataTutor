@@ -2,7 +2,7 @@
 
 > Documento vivo y fuente de contexto del proyecto. Actualizarlo al cerrar cada fase o tras cambios relevantes, y pegarlo al inicio de cada chat nuevo con el Gem. Si el estado pegado difiere de los archivos de conocimiento, prevalece este estado para el contexto de la conversación; los archivos actuales del repositorio siguen siendo la fuente de verdad sobre qué código está realmente implementado.
 >
-> **Última actualización:** 18 oct 2026 (noche, rama `evilnightmare010-analyze-agent-project`, commit `bd3db88`) · **Fase actual:** 6 cerrada en local; 7 (despliegue/evaluación) y 8 (documentación) en cierre final · **Entrega del trabajo:** 18 oct 2026 (hoy).
+> **Última actualización:** 18 oct 2026 (noche, rama `evilnightmare010-analyze-agent-project`, URLs públicas registradas) · **Fase actual:** 6 cerrada en local; 7 (despliegue/evaluación) y 8 (documentación) en cierre final · **Entrega del trabajo:** 18 oct 2026 (hoy).
 >
 > **Etiquetas de certeza** usadas en este documento: **[PROBADO]** hay salida de una prueba o comando pegada en el chat · **[OBSERVADO]** visto en la UI, en la BD, en GitHub o en logs · **[IMPLEMENTADO]** el código se aplicó pero no hay prueba dedicada · **[HIPÓTESIS]** explicación plausible, sin demostrar · **[PENDIENTE]** falta hacerlo o verificarlo.
 >
@@ -53,7 +53,7 @@
 
 **Qué cambió el 18 oct (rama `evilnightmare010-analyze-agent-project`, commits `22f64a0`, `0553f78`, `bb8813d` y `bd3db88`).** `README.md` raíz, rediseño del frontend con identidad de Ingeniería de Datos y posterior estética ciberpunk oscura con rojo neón, mejoras de accesibilidad y diseño responsive, mascota robótica animada, estado conversacional `Pensando...`, bloqueo de envío mientras hay PDFs en `pending`/`processing`, recuperación híbrida vectorial + textual para documentos recién cargados, filtro de documentos `ready`, `render.yaml`, `frontend/vercel.json`, `docs/08_DOCUMENTO_TECNICO.md` y `docs/09_GUIA_DESPLIEGUE.md`, captura en `docs/evidencias/aplicacion-actual.png`, `init_database()` en `core/database.py`, `llm/chat.py` leyendo el modelo y parámetros desde `settings` y metadatos oficiales `DataTutor`.
 
-**Qué falta.** Subir esta consolidación del `07_PROJECT_STATE.md` a la rama de trabajo, levantar los servicios en Render y Vercel (Anexo A), ejecutar el runner de evaluación con métricas sobre `eval/questions.jsonl`, corregir los detalles pendientes de `docs/08_DOCUMENTO_TECNICO.md` (asignatura, tabla de corpus de 7 documentos, métricas, URLs verificadas) y exportarlo a PDF, diagrama gráfico, diapositivas y ensayo de la demo con el extracto de la tesis.
+**Qué falta.** Ejecutar el runner de evaluación con métricas sobre `eval/questions.jsonl`, completar la tabla de corpus y exportar el documento técnico a PDF, diagrama gráfico, diapositivas y ensayo de la demo con el extracto de la tesis. Las URLs públicas ya están registradas y verificadas para carga del frontend y salud del backend.
 
 **Riesgos principales (detalle en §17).**
 
@@ -108,7 +108,7 @@ PostgreSQL 16 + pgvector  127.0.0.1:5432   (DB datatutor; Keycloak usa la DB key
 * Puertos: 5173 (Vite, estricto), 8000 (FastAPI), 8080 (Keycloak), 5432 (PostgreSQL), 11434 (Ollama).
 * Contenedores Docker: `datatutor-postgres`, `datatutor-keycloak`. Volumen de datos: `datatutor-pgdata`.
 * Separación IPv4/identidad: el navegador usa `localhost` (coincide con `redirectUris`, `webOrigins` y el claim `iss`); backend ↔ Keycloak/API usan `127.0.0.1` para evitar la demora IPv6 en Windows.
-* **Despliegue público planificado (Anexo A):** frontend en Vercel, backend y PostgreSQL con pgvector en Render. Keycloak y Ollama permanecen locales, por lo que la demo completa es local.
+* **Despliegue público registrado (Anexo A):** frontend en [Vercel](https://data-tutor.vercel.app/), backend en [Render](https://datatutor.onrender.com) y health check en [`/api/v1/health`](https://datatutor.onrender.com/api/v1/health). Keycloak y Ollama permanecen locales, por lo que la demo completa es local.
 
 ---
 
@@ -558,7 +558,7 @@ tests/test_api_contracts.py::test_conversation_lifecycle_and_cross_user_isolatio
 | 2 | Verificar el comportamiento visual del estado `Pensando...` en una sesión autenticada | Calidad | Probar una pregunta real y confirmar que la mascota queda encima, sin cubrir el texto |
 | 3 | Falta evaluación con métricas (requisito del enunciado y de `docs/08`) | Alto | `scripts/run_eval.py` sobre `eval/questions.jsonl`: aciertos, rechazos correctos, falsos negativos, latencia p50/p95 |
 | 4 | Despliegue público en Render y Vercel (Anexo A) | Riesgo / Entrega | Levantar servicios con `render.yaml` y `vercel.json`, verificar `/api/v1/health` desde red externa y documentar con rigor |
-| 5 | Documento técnico (`docs/08`): asignatura, tabla de corpus (7 docs), evaluación, URLs y PDF | Entrega | Sustituir `[Nombre de la asignatura]` por *Integración e Implementación de Software*, añadir corpus/métricas y exportar PDF |
+| 5 | Documento técnico (`docs/08`): tabla de corpus, evaluación y PDF | Entrega | Añadir corpus/métricas y exportar el documento técnico a PDF |
 | 6 | Diagrama gráfico y diapositivas (8–12 láminas en PDF) | Entrega | Convertir el esquema de §3 en diagrama e incluir la secuencia del enunciado §5.4 |
 | 7 | Demo: extracto de la tesis y pregunta sobre un documento recién cargado | Entrega | Extracto de ~30 páginas con texto seleccionable; subir desde la UI; preguntar; ensayar en local con rechazo incluido |
 | 8 | Respaldo léxico sin pruebas unitarias | Calidad | Pruebas con fakes: normalización acepta; Kafka y sushi rechazan |
@@ -659,13 +659,13 @@ git push origin evilnightmare010-analyze-agent-project
 2. **Validación del frontend post-merge:** desde `frontend/`, ejecutar `npm run lint` y `npm run build` para confirmar que el rediseño de Ingeniería de Datos compila sin errores.
 3. **Despliegue público (Anexo A):**
 * Levantar el Web Service en Render (plan `free`), completando las variables `sync: false` en el panel y usando la *Internal Database URL*.
-* Verificar `GET https://<tu-servicio>.onrender.com/api/v1/health` desde otra red (datos del celular) hasta recibir `200 OK`.
-* Desplegar `frontend/` en Vercel con `VITE_API_BASE_URL=https://<tu-servicio>.onrender.com/api/v1` y actualizar `CORS_ORIGINS` en Render con el dominio de Vercel (`https://<tu-app>.vercel.app,http://localhost:5173`).
+* Verificar `GET https://datatutor.onrender.com/api/v1/health` desde otra red (datos del celular); el endpoint registrado respondió `200 OK`.
+* Mantener `VITE_API_BASE_URL=https://datatutor.onrender.com/api/v1` y actualizar `CORS_ORIGINS` en Render con `https://data-tutor.vercel.app,http://localhost:5173`.
 
 
 4. **Runner de evaluación y pruebas:** ejecutar `scripts/run_eval.py` sobre `eval/questions.jsonl` (aciertos, rechazos correctos, falsos negativos, latencia p50/p95) y guardar la evidencia en `docs/evidencias/`; añadir pruebas con fakes para el respaldo léxico si da el tiempo.
 5. **Documento técnico (`docs/08_DOCUMENTO_TECNICO.md`):**
-* Reemplazar `[Nombre de la asignatura]` por **Integración e Implementación de Software**.
+* La asignatura ya está registrada como **Integración e Implementación de Software** en `docs/08_DOCUMENTO_TECNICO.md`.
 * Agregar la tabla del corpus real (los 7 documentos y 7 932 chunks de §12).
 * Agregar las métricas de evaluación y actualizar la conclusión (§14).
 * Registrar las URLs públicas de Render y Vercel en §12 una vez verificado `/health`, manteniendo la explicación honesta de que Keycloak y Ollama son locales.
@@ -713,7 +713,9 @@ No copiar valores secretos a este documento, a `.env.example`, a Git ni a un cha
 
 **Estado [IMPLEMENTADO en código / EN CURSO en paneles cloud]:** el equipo despliega el frontend en Vercel y el backend en Render con un PostgreSQL administrado ya creado en Render. `render.yaml` (`plan: free`, `PYTHON_VERSION=3.12.7`, `sync: false`), `backend/app/config/settings.py` (`normalize_database_url`), `frontend/vercel.json` y `docs/09_GUIA_DESPLIEGUE.md` están listos.
 
-**Qué sí se puede demostrar públicamente:** `GET https://<servicio-render>.onrender.com/api/v1/health`, que no requiere token ni depende de Ollama o Keycloak, y la carga del frontend en Vercel.
+**URLs públicas registradas y comprobadas:** [Frontend Vercel](https://data-tutor.vercel.app/) carga correctamente; [Backend Render](https://datatutor.onrender.com) está publicado; y [`GET /api/v1/health`](https://datatutor.onrender.com/api/v1/health) respondió `200 OK`. Estas comprobaciones no sustituyen la validación pública del login, chat RAG y carga de documentos.
+
+**Qué sí se puede demostrar públicamente:** `GET https://datatutor.onrender.com/api/v1/health`, que no requiere token ni depende de Ollama o Keycloak, y la carga del frontend en Vercel.
 
 **Qué no puede funcionar hoy en la nube pública, y por qué:**
 
@@ -727,14 +729,14 @@ No copiar valores secretos a este documento, a `.env.example`, a Git ni a un cha
 **Variables del servicio web en Render (panel de Render, nunca en el `.env` local):**
 
 * `DATABASE_URL`: pegar la *Internal Database URL* de la base de Render. El validador `normalize_database_url` de `settings.py` convierte `postgres://` o `postgresql://` a `postgresql+psycopg://` automáticamente. (Si algún día se conecta desde el PC para pruebas, usar la External URL con `?sslmode=require` desde `.env.render`).
-* `CORS_ORIGINS`: inicialmente `http://localhost:5173`; una vez desplegado Vercel, actualizar a `https://<tu-app>.vercel.app,http://localhost:5173` (separado por coma, sin barra `/` final y sin JSON).
+* `CORS_ORIGINS`: `https://data-tutor.vercel.app,http://localhost:5173` (separado por coma, sin barra `/` final y sin JSON).
 * `OLLAMA_URL`, `KEYCLOAK_URL`, `KEYCLOAK_JWKS_URL`: poner los valores locales de relleno (`http://127.0.0.1:11434`, `http://localhost:8080`, `http://127.0.0.1:8080/realms/datatutor/protocol/openid-connect/certs`) para que la validación de `Settings` permita arrancar el servicio.
 * Comando de arranque en `render.yaml`: `uv run uvicorn app.main:app --host 0.0.0.0 --port $PORT`.
 * Si al arrancar en Render fallara `CREATE EXTENSION IF NOT EXISTS vector`, ejecutar una vez `CREATE EXTENSION vector;` en la consola SQL de Render.
 
 **Variables en Vercel (`Root Directory: frontend`, preset Vite):**
 
-* `VITE_API_BASE_URL` = `https://<tu-servicio>.onrender.com/api/v1`
+* `VITE_API_BASE_URL` = `https://datatutor.onrender.com/api/v1`
 * `VITE_KEYCLOAK_URL` = `http://localhost:8080`
 * `VITE_KEYCLOAK_REALM` = `datatutor`
 * `VITE_KEYCLOAK_CLIENT_ID` = `datatutor-web`

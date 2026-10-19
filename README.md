@@ -128,3 +128,9 @@ Después de crear los servicios, configura en Render `OLLAMA_URL`, `KEYCLOAK_URL
 No se deben publicar URLs, credenciales ni afirmaciones de despliegue hasta haber verificado login, chat, carga de documentos y protección de endpoints desde una red externa.
 
 La guía paso a paso está en [`docs/09_GUIA_DESPLIEGUE.md`](docs/09_GUIA_DESPLIEGUE.md). Para la estrategia actual del equipo, la demo completa permanece local porque Keycloak y Ollama locales no son accesibles desde internet; Render y Vercel se presentan con sus URLs reales y se verifica al menos la salud pública del backend.
+
+URLs públicas registradas:
+
+- Frontend: https://data-tutor.vercel.app/
+- Backend: https://datatutor.onrender.com
+- Health check: https://datatutor.onrender.com/api/v1/health

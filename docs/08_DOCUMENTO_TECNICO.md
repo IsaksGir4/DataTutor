@@ -6,7 +6,7 @@
 
 **Proyecto:** DataTutor — Tutor inteligente RAG para datos.  
 **Integrantes:** Michelle Ruiz Segura; Isaac Camilo Giraldo Gómez; Juan José Ramírez Pulgarín.  
-**Asignatura:** [Nombre de la asignatura].  
+**Asignatura:** Integración e Implementación de Software.
 **Fecha:** 18 de octubre de 2026.
 
 ## 2. Tema y problema
@@ -139,7 +139,7 @@ Las consultas filtran por `owner_id = sub`, de modo que un usuario no puede cons
 - PostgreSQL: `127.0.0.1:5432`
 - Ollama: `http://127.0.0.1:11434`
 
-**Despliegue público planificado:**
+**Despliegue público registrado:**
 
 - Frontend: Vercel, desde la carpeta `frontend/`.
 - Backend: Render, como servicio web de Python desde la carpeta `backend/`.
@@ -147,12 +147,12 @@ Las consultas filtran por `owner_id = sub`, de modo que un usuario no puede cons
 - Autenticación: Keycloak debe estar publicado en una URL accesible desde el navegador y desde Render.
 - Modelo local: Ollama debe ejecutarse en un servicio accesible desde Render. El Ollama instalado en el computador solo sirve para la demo local; `http://127.0.0.1:11434` no funciona desde Render.
 
-**URL pública del frontend:** [Completar después de publicar en Vercel].  
-**URL pública del backend:** [Completar después de publicar en Render].  
-**URL pública de Keycloak:** [Completar después de publicar o elegir el servicio de autenticación].  
+**URL pública del frontend:** [DataTutor en Vercel](https://data-tutor.vercel.app/).
+**URL pública del backend:** [DataTutor API en Render](https://datatutor.onrender.com).
+**URL pública de Keycloak:** No disponible; Keycloak se ejecuta localmente para la demostración.
 **URL pública de Ollama:** [Completar después de alojar el modelo o definir el servicio de inferencia].
 
-Render permite PostgreSQL con `pgvector`; Vercel puede construir y servir el frontend Vite. Sin embargo, para que el despliegue público sea realmente funcional no basta con publicar solo dos servicios: el backend también necesita acceso público a Keycloak y a Ollama. Las URLs y variables deben completarse únicamente después de probar login, chat, carga y protección de endpoints desde internet.
+La verificación pública realizada confirmó que Vercel sirve la aplicación y que Render responde `200 OK` en `https://datatutor.onrender.com/api/v1/health`. El flujo completo de login, chat RAG y carga de documentos se valida localmente porque Keycloak y Ollama continúan ejecutándose en el entorno de desarrollo.
 
 No se debe presentar una URL pública como evidencia hasta comprobar login, chat, carga de documentos y protección de endpoints desde una red externa.
 
