@@ -144,6 +144,20 @@ body::before {
 .list-item.active { border-color: rgba(255,48,79,.78); background: linear-gradient(90deg, rgba(255,48,79,.18), rgba(189,41,71,.1)); color: #fff; box-shadow: inset 3px 0 var(--red-hot), 0 0 18px rgba(255,23,68,.08); }
 .empty-list-message, .doc-meta { color: var(--muted); font-size: .68rem; }
 .doc-meta { margin-top: 3px; font-family: var(--mono); }
+.processing-notice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: -2px 0 10px;
+  padding: 9px 10px;
+  border: 1px solid rgba(255, 102, 123, .22);
+  border-radius: 9px;
+  color: var(--red-soft);
+  background: rgba(255, 23, 68, .08);
+  font-family: var(--mono);
+  font-size: .62rem;
+  line-height: 1.45;
+}
 
 .badge { display: inline-block; padding: 3px 7px; border-radius: 999px; font-family: var(--mono); font-size: .58rem; font-weight: 500; letter-spacing: .03em; text-transform: uppercase; }
 .badge-ready, .badge-answered { background: rgba(255, 68, 92, .14); color: #ff8a9a; }

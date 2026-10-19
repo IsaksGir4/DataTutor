@@ -56,6 +56,7 @@ export default function App() {
   const hasPendingDocs = documents.some(
     (d) => d.status === "pending" || d.status === "processing"
   );
+  const canAskQuestion = !sending && !loadingMessages && !hasPendingDocs;
 
   useEffect(() => {
     if (didLoadRef.current) return;
@@ -167,7 +168,7 @@ export default function App() {
   async function handleSendQuestion(e) {
     e.preventDefault();
     const trimmed = question.trim();
-    if (trimmed.length < 2 || sending) return;
+    if (trimmed.length < 2 || !canAskQuestion) return;
 
     setErrorBanner(null);
     setSending(true);
@@ -405,6 +406,12 @@ export default function App() {
           >
             {uploading ? "Subiendo PDF..." : "Subir Documento PDF"}
           </button>
+          {hasPendingDocs && (
+            <div className="processing-notice" role="status" aria-live="polite">
+              <span className="loading-spinner small" aria-hidden="true" />
+              Indexando el documento. Podrás consultarlo cuando aparezca como READY.
+            </div>
+          )}
 
           <div className="item-list" style={{ maxHeight: 280 }}>
             {documents.length === 0 && (
@@ -581,13 +588,13 @@ export default function App() {
             placeholder="Escribe una pregunta sobre ingeniería de datos, ciencia de datos o bases de datos..."
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
-            disabled={sending || loadingMessages}
+            disabled={!canAskQuestion}
             maxLength={2000}
           />
           <button
             type="submit"
             className="btn btn-primary"
-            disabled={sending || loadingMessages || question.trim().length < 2}
+            disabled={!canAskQuestion || question.trim().length < 2}
             aria-label="Enviar pregunta"
           >
             {sending ? "Consultando..." : "Enviar"}

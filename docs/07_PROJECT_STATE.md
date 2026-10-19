@@ -588,6 +588,7 @@ git ls-files corpus
 6. **Demo:** extracto de la tesis con texto seleccionable, subida desde la UI y pregunta sobre su contenido; guion con rechazo incluido; ensayar en local.
 7. **Documentación:** README raíz y `docs/08_DOCUMENTO_TECNICO.md` actualizados con arranque local, ingesta, límites, seguridad, flujo RAG y los 14 apartados; integrantes y captura inicial registrados; faltan convertir el documento a PDF y completar URLs públicas y capturas del despliegue.
 8. **Despliegue:** publicar frontend en Vercel y backend/pgvector en Render; para la estrategia elegida, verificar URLs públicas y `/health`, pero ejecutar la demo completa localmente porque Keycloak y Ollama locales no son visibles desde internet.
+9. **Recuperación tras carga de PDF:** la búsqueda combina similitud vectorial con coincidencias textuales de términos específicos y solo consulta fragmentos de documentos `ready`; mientras un PDF está en `pending` o `processing`, el frontend bloquea nuevas preguntas y muestra el estado de indexación.
 8. **Opcional:** despliegue público y comparación de embeddings, solo si hay tiempo y fuera del campus.
 
 ---
