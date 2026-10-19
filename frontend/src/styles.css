@@ -10,6 +10,18 @@
   padding: 0;
 }
 
+button,
+input {
+  font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+.list-item:focus-visible {
+  outline: 3px solid #38bdf8;
+  outline-offset: 2px;
+}
+
 .app-layout {
   display: grid;
   grid-template-columns: 350px 1fr;
@@ -116,6 +128,12 @@
 .list-item.active {
   border-color: #38bdf8;
   background: #0f2942;
+}
+
+.empty-list-message {
+  color: #94a3b8;
+  font-size: 0.78rem;
+  padding: 10px 4px;
 }
 
 .doc-meta {
@@ -263,4 +281,120 @@
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   font-size: 0.95rem;
+}
+
+.page-state {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  gap: 12px;
+  padding: 32px;
+  text-align: center;
+}
+
+.empty-state {
+  color: #64748b;
+  margin: auto;
+  text-align: center;
+  max-width: 560px;
+  padding: 32px;
+}
+
+.empty-state h3 {
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  margin: 0 auto;
+  border: 3px solid #bae6fd;
+  border-top-color: #0284c7;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-spinner.small {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin: 0 8px 0 0;
+  vertical-align: -3px;
+  border-width: 2px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 900px) {
+  .app-layout {
+    grid-template-columns: 280px 1fr;
+  }
+
+  .message-card {
+    max-width: 92%;
+  }
+}
+
+@media (max-width: 700px) {
+  .app-layout {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  .sidebar {
+    max-height: none;
+    overflow: visible;
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .brand-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #0f172a;
+    padding: 4px 0 12px;
+  }
+
+  .item-list {
+    max-height: 180px;
+  }
+
+  .chat-main {
+    min-height: 65vh;
+    height: auto;
+  }
+
+  .messages-container {
+    min-height: 48vh;
+    padding: 16px 12px;
+  }
+
+  .message-card {
+    max-width: 100%;
+  }
+
+  .chat-form {
+    position: sticky;
+    bottom: 0;
+    padding: 10px 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

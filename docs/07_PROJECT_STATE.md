@@ -2,7 +2,7 @@
 
 > Documento vivo y fuente de contexto del proyecto. Actualizarlo al cerrar cada fase o tras cambios relevantes, y pegarlo al inicio de cada chat nuevo con el Gem. Si el estado pegado difiere de los archivos de conocimiento, prevalece este estado para el contexto de la conversación; los archivos actuales del repositorio siguen siendo la fuente de verdad sobre qué código está realmente implementado.
 >
-> **Última actualización:** 17 oct 2026 (tarde) · **Fase actual:** 6 — integración local, guion de demo y calibración · **Entrega del trabajo:** 18 oct 2026.
+> **Última actualización:** 18 oct 2026 · **Fase actual:** 6 — integración local, frontend y documentación · **Entrega del trabajo:** 18 oct 2026.
 >
 > **Etiquetas de certeza** usadas en este documento: **[PROBADO]** hay salida de una prueba o comando pegada en el chat · **[OBSERVADO]** visto en la UI, en la BD o en logs · **[IMPLEMENTADO]** el código se aplicó pero no hay prueba dedicada · **[HIPÓTESIS]** explicación plausible, sin demostrar · **[PENDIENTE]** falta hacerlo o verificarlo.
 >
@@ -369,6 +369,20 @@ Existe `backend/datatutor_pre_reembedding.dump` (298 kB, anterior al re-embeddin
 - **Origen:** acceder siempre por `http://localhost:5173`. `redirectUris` y `webOrigins` del realm solo lo permiten, y la API criptográfica de PKCE requiere contexto seguro.
 - **[PENDIENTE]** Respuestas del usuario a las 3 preguntas de comprensión de la Fase 5 (StrictMode e `initPromise`; `FormData` sin `Content-Type` manual; qué capa frena un `DELETE` a un documento global o en proceso).
 
+**Mejoras aplicadas el 18 oct [IMPLEMENTADO]:**
+
+- Se conservaron la identidad oscura/azul y el contrato existente de la API.
+- Se agregaron estados visuales de autenticación y carga con `aria-live`, spinner y mensajes de error con `role="alert"`.
+- Se añadieron etiquetas accesibles y foco visible para controles de chat, subida, eliminación, logout y selección de conversaciones.
+- Las conversaciones se pueden seleccionar también con teclado (`Enter` o espacio).
+- Se agregó estado vacío explícito cuando no hay conversaciones o documentos.
+- Se añadió un layout responsive para pantallas medianas y móviles, además de respeto por `prefers-reduced-motion`.
+- Se corrigió el arranque local de PostgreSQL: el backend crea la extensión `vector` y las tablas ORM si la base está vacía, evitando que una instalación nueva falle con `relation does not exist`.
+- Se registraron los tres integrantes en `docs/08_DOCUMENTO_TECNICO.md` y se incorporó la captura de la aplicación en `docs/evidencias/aplicacion-actual.png`.
+- Se preparó `render.yaml` para Render (API + PostgreSQL con pgvector) y `frontend/vercel.json` para la SPA de Vercel.
+- Se añadió `docs/09_GUIA_DESPLIEGUE.md` con el procedimiento de Render/Vercel y el guion de pruebas manuales.
+- El cliente de chat ahora consume `CHAT_MODEL`, `NUM_CTX` y `NUM_PREDICT` desde configuración, lo que permite ajustar el despliegue sin modificar código.
+
 ---
 
 ## 14. Seguridad y cadena de suministro
@@ -556,21 +570,22 @@ git ls-files corpus
 | 4    | Subida asíncrona, listar/borrar, estados, cascada                                                                 | 8–16 oct      | ✅          |
 | 5    | Frontend: login, chat con fuentes, historial, documentos, errores, logout; corrección de defectos                 | 9–17 oct      | ✅          |
 | 6    | Integración local completa, guion de demo (rechazo + subida de la tesis), calibración                            | 17 oct         | 🔄 En curso |
-| 7    | Evaluación completa, `bge-m3` vs `nomic-embed-text`, CI, despliegue público fuera del campus                 | 17–18 oct     | ⬜          |
-| 8    | README, diagrama, documento técnico, diapositivas                                                                 | 17–18 oct     | ⬜          |
+| 7    | Evaluación completa, `bge-m3` vs `nomic-embed-text`, CI, despliegue público fuera del campus                 | 17–18 oct     | 🔄 Pendiente |
+| 8    | README, diagrama, documento técnico, diapositivas                                                                 | 17–18 oct     | 🔄 Parcial |
 | 9    | Ensayo de sustentación y colchón sin funcionalidades nuevas                                                      | 18 oct         | ⬜          |
 
 ---
 
 ## 21. Próximas acciones
 
-1. **Git (hoy):** actualizar `.gitignore` (§19), comprobar con `git check-ignore`, hacer los 3 commits y `git push`.
+1. **Git (hoy):** comprobar `.gitignore`, revisar los cambios y preparar commits pequeños; no incluir PDFs ni secretos.
 2. **Corpus:** decidir el `scope` de los libros antes de ingerir el resto; respaldar la BD; ingerir los libros restantes por `scripts/ingest_corpus.py`; validar muestra de embeddings.
 3. **Pruebas del respaldo léxico** con fakes (sin LLM) y registrar `uv run pytest -v` completo.
 4. **Revisar citas y *grounding*** de las respuestas (§15) y la posible falla de "automatización en ML".
 5. **Calibración** con `eval/questions.jsonl`; registrar métricas y latencia por nodo.
 6. **Demo:** extracto de la tesis con texto seleccionable, subida desde la UI y pregunta sobre su contenido; guion con rechazo incluido; ensayar en local.
-7. **Documentación:** README (cómo ingerir el corpus, PDFs no versionados, limitaciones: modelo 3B, CPU, heurística léxica), diagrama, documento técnico y diapositivas.
+7. **Documentación:** README raíz y `docs/08_DOCUMENTO_TECNICO.md` actualizados con arranque local, ingesta, límites, seguridad, flujo RAG y los 14 apartados; integrantes y captura inicial registrados; faltan convertir el documento a PDF y completar URLs públicas y capturas del despliegue.
+8. **Despliegue:** publicar frontend en Vercel y backend/pgvector en Render; para la estrategia elegida, verificar URLs públicas y `/health`, pero ejecutar la demo completa localmente porque Keycloak y Ollama locales no son visibles desde internet.
 8. **Opcional:** despliegue público y comparación de embeddings, solo si hay tiempo y fuera del campus.
 
 ---
